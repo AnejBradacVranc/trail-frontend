@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
+
 @import 'tailwindcss';
 
 @import 'tw-animate-css';
@@ -14,7 +16,7 @@
 	--popover-foreground: oklch(0.129 0.042 264.695);
 	--primary: #468dfe;
 	--primary-foreground: oklch(0.984 0.003 247.858);
-	--secondary: oklch(0.968 0.007 247.896);
+	--secondary: oklch(77.944% 0.00009 271.152);
 	--secondary-foreground: oklch(0.208 0.042 265.755);
 	--muted: oklch(0.968 0.007 247.896);
 	--muted-foreground: oklch(0.554 0.046 257.417);
@@ -117,9 +119,10 @@
 	}
 	body {
 		@apply bg-background text-foreground;
+		font-family: 'Inter', sans-serif;
 	}
 	h1 {
-		@apply text-4xl font-semibold;
+		@apply text-4xl font-bold;
 	}
 	h2 {
 		@apply text-3xl font-semibold;
@@ -129,5 +132,21 @@
 	}
 	h4 {
 		@apply text-xl font-semibold;
+	}
+
+	/* Custom Scrollbar Styling */
+	::-webkit-scrollbar {
+		width: 8px;
+	}
+	::-webkit-scrollbar-track {
+		background: transparent;
+	}
+	::-webkit-scrollbar-thumb {
+		background: var(--secondary);
+		border-radius: 9999px;
+		transition: background-color 0.2s;
+	}
+	::-webkit-scrollbar-thumb:hover {
+		background: var(--secondary);
 	}
 }

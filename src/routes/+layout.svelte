@@ -16,7 +16,7 @@
 	<Sidebar />
 	<main class="flex w-full">
 		<SidebarTrigger />
-		<div class="flex w-full justify-center px-4 py-8 md:px-6 lg:px-8">
+		<div class="flex w-full flex-col items-center gap-8 px-4 py-8 md:px-6 lg:px-8">
 			{@render children()}
 		</div>
 	</main>

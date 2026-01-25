@@ -20,6 +20,7 @@
 		"@eslint/js": "^9.39.1",
 		"@inlang/paraglide-js": "^2.6.0",
 		"@internationalized/date": "^3.10.1",
+		"@lucide/svelte": "^0.561.0",
 		"@sveltejs/adapter-auto": "^7.0.0",
 		"@sveltejs/kit": "^2.49.1",
 		"@sveltejs/vite-plugin-svelte": "^6.2.1",
@@ -50,8 +51,9 @@
 		"vitest-browser-svelte": "^2.0.1"
 	},
 	"dependencies": {
-		"@lucide/svelte": "^0.563.1",
 		"@tanstack/svelte-form": "^1.27.7",
+		"axios": "^1.13.2",
+		"moment": "^2.30.1",
 		"zod": "^4.3.6"
 	}
 }
