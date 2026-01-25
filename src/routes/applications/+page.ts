@@ -4,6 +4,7 @@ import { isSuccessResponse } from '$lib/types/genericResponse';
 
 export const load: PageLoad = async () => {
 	try {
+		//TODO get user email from session
 		const response = await getJobApplicationsForUserByEmail('alice@example.com');
 		
 		if (isSuccessResponse(response.data)) {
