@@ -1,17 +1,29 @@
 <script lang="ts">
+	import './layout.css';
 	import { page } from '$app/state';
 	import { locales, localizeHref } from '$lib/paraglide/runtime';
-	import './layout.css';
 	import favicon from '$lib/assets/favicon.svg';
 	import Sidebar from '$lib/components/navigation/sidebar.svelte';
 	import Navbar from '$lib/components/navigation/navbar.svelte';
 	import { SidebarProvider, SidebarTrigger } from '$lib/components/ui/sidebar';
+	import type { LayoutProps } from './$types';
 
-	let { children } = $props();
+	let { children, data }: LayoutProps = $props();
+
+	const { seo, formFieldData } = $derived(data);
 </script>
 
-<svelte:head><link rel="icon" href={favicon} /></svelte:head>
-<Navbar />
+<svelte:head>
+	<link rel="icon" href={favicon} />
+	<title>{seo.title}</title>
+	<meta name="description" content={seo.description} />
+	<meta property="og:title" content={seo.title} />
+	<meta property="og:description" content={seo.description} />
+	<meta property="og:url" content={seo.url} />
+	<meta property="og:image" content={seo.image} />
+</svelte:head>
+
+<Navbar {formFieldData} />
 <SidebarProvider open={true}>
 	<Sidebar />
 	<main class="flex w-full">

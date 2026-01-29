@@ -9,10 +9,12 @@
 	} from '$lib/components/ui/navigation-menu';
 	import { Plus } from '@lucide/svelte';
 	import { Button, buttonVariants } from '../ui/button';
-	import * as Dialog from "$lib/components/ui/dialog/index.js";
+	import * as Dialog from '$lib/components/ui/dialog/index.js';
 	import JobApplicationForm from '../forms/jobApplication/jobApplicationForm.svelte';
 
 	const navItems: { href: string; label: string }[] = [];
+
+	const { formFieldData } = $props();
 </script>
 
 <NavigationMenu class=" justify-end">
@@ -24,17 +26,14 @@
 		{/each}
 		<NavigationMenuItem>
 			<Dialog.Root>
-				<Dialog.Trigger >
-					<Button ><Plus /><span>Add Application</span></Button>
+				<Dialog.Trigger>
+					<Button><Plus /><span>Add Application</span></Button>
 				</Dialog.Trigger>
-				<Dialog.Content class="sm:max-w-[1000px] max-h-[95vh] overflow-y-auto">
-					<JobApplicationForm/>
+				<Dialog.Content class="max-h-[95vh] overflow-y-auto sm:max-w-[1000px]">
+					<JobApplicationForm {formFieldData} />
 					<Dialog.Footer>
-						<Dialog.Close class={buttonVariants({ variant: "outline" })}
-						 >Cancel</Dialog.Close
-						>
-						
-					   </Dialog.Footer>
+						<Dialog.Close class={buttonVariants({ variant: 'outline' })}>Cancel</Dialog.Close>
+					</Dialog.Footer>
 				</Dialog.Content>
 			</Dialog.Root>
 		</NavigationMenuItem>

@@ -21,7 +21,7 @@
 
 	const { data }: PageProps = $props();
 
-	const applications = $derived(data.data);
+	const { applications, formFieldData } = $derived(data);
 </script>
 
 <!-- Heading Section -->
@@ -29,8 +29,8 @@
 	<div class="flex flex-col gap-4">
 		<h1>All Applications</h1>
 	</div>
-	<div class="flex gap-4 items-center">
-		<Button variant="outline"><Sheet/> Export</Button>		
+	<div class="flex items-center gap-4">
+		<Button variant="outline"><Sheet /> Export</Button>
 	</div>
 </section>
 
@@ -53,14 +53,10 @@
 			</Field>
 		</CardContent>
 		<CardFooter class="border-t text-sm">
-			<!-- Filters -->					 	
-			<div class="flex justify-between w-full">
-				<div>
-					TODO FILTERS
-				</div>
-				<span class="text-muted-foreground">
-					 TODO PAGINATION
-				</span>
+			<!-- Filters -->
+			<div class="flex w-full justify-between">
+				<div>TODO FILTERS</div>
+				<span class="text-muted-foreground"> TODO PAGINATION </span>
 			</div>
 		</CardFooter>
 	</Card>
@@ -79,22 +75,20 @@
 				</TableHeader>
 				<TableBody>
 					{#each applications as application}
-						<TableRow 
+						<TableRow
 							class="cursor-pointer "
-							onclick={() => {								
-								goto(`/applications/${application.application_id}`);								
+							onclick={() => {
+								goto(`/applications/${application.application_id}`);
 							}}
-						>						
-								<TableCell>{application.company_name}</TableCell>
-								<TableCell>{application.job_title}</TableCell>
-								<TableCell>{moment(application.applied_at).format('L')}</TableCell>
-								<TableCell>{application.status_name}</TableCell>
-								<TableCell class="text-right"
-									>{application.salary_min}€ - {application.salary_max}€</TableCell
-								>	
-																	
+						>
+							<TableCell>{application.company_name}</TableCell>
+							<TableCell>{application.job_title}</TableCell>
+							<TableCell>{moment(application.applied_at).format('L')}</TableCell>
+							<TableCell>{application.status_name}</TableCell>
+							<TableCell class="text-right"
+								>{application.salary_min}€ - {application.salary_max}€</TableCell
+							>
 						</TableRow>
-					
 					{/each}
 				</TableBody>
 				<!--<TableFooter>
@@ -112,14 +106,12 @@
 <!-- Stats section-->
 <section class="container">
 	<!-- Search -->
-<Card>
-	<CardContent>
-		Stats
-	</CardContent>
-</Card>
+	<Card>
+		<CardContent>Stats</CardContent>
+	</Card>
 	<!--Table-->
 </section>
 
 <section class="container">
-	<JobApplicationForm/>
+	<JobApplicationForm {formFieldData} />
 </section>
