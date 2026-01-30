@@ -17,6 +17,20 @@ export const load: LayoutLoad = async ({
 		statuses = await getApplicationStatuses();
 		platforms = await getPlatforms();
 
+		if (!statuses.data.success) {
+			console.error(
+				'Error fetching application statuses in layout load',
+				statuses.data.data.message
+			);
+		}
+
+		if (!platforms.data.success) {
+			console.error(
+				'Error fetching application platforms in layout load',
+				platforms.data.data.message
+			);
+		}
+
 		if (statuses?.data.success && statuses.data.data) {
 			statusLabelsMap = new Map(
 				statuses.data.data.map((status) => [status.status_id.toString(), status.status_name])
@@ -29,7 +43,7 @@ export const load: LayoutLoad = async ({
 			);
 		}
 	} catch (error) {
-		console.error('Error fetching application statuses in layout load:', error);
+		console.error('Error fetching application statuses and platforms in layout load:', error);
 	}
 
 	return {

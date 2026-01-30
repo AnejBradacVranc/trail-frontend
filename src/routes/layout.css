@@ -17,11 +17,11 @@
 	--primary: #468dfe;
 	--primary-foreground: oklch(0.984 0.003 247.858);
 	--secondary: oklch(77.944% 0.00009 271.152);
-	--secondary-foreground: oklch(0.208 0.042 265.755);
+	--secondary-foreground: oklch(39.766% 0.10886 265.286);
 	--muted: oklch(0.968 0.007 247.896);
 	--muted-foreground: oklch(0.554 0.046 257.417);
 	--accent: oklch(0.968 0.007 247.896);
-	--accent-foreground: oklch(0.208 0.042 265.755);
+	--accent-foreground: #05bba6;
 	--destructive: oklch(0.577 0.245 27.325);
 	--success: oklch(0.578 0.211 142.478);
 	--border: oklch(0.929 0.013 255.508);

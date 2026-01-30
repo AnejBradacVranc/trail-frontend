@@ -6,26 +6,20 @@
 	import { quintOut } from 'svelte/easing';
 	import { Tween } from 'svelte/motion';
 	import { cn } from '$lib/utils';
-
-	export interface InfoCardProps {
-		title: string;
-		value: number;
-		Icon?: any;
-		subContent?: string;
-		SubContentIcon?: any;
-		suffix?: string;
-		type?: 'normal' | 'success' | 'destructive';
-	}
+	import type { StatisticSummary } from '$lib/types/statistics';
+	import { ChartColumnDecreasing, ChartColumnIncreasing, Info } from '@lucide/svelte';
+	import CardDescription from './ui/card/card-description.svelte';
+	import CardFooter from './ui/card/card-footer.svelte';
 
 	const {
-		title,
-		Icon,
+		name,
 		value,
-		subContent,
-		suffix,
-		SubContentIcon,
-		type = 'normal'
-	}: InfoCardProps = $props();
+		delta,
+		unit,
+		period,
+		trend = 'flat',
+		summary_text
+	}: StatisticSummary = $props();
 
 	let animatedValue = new Tween(0, { duration: 2000, easing: quintOut });
 
@@ -38,28 +32,44 @@
 	});
 </script>
 
-<Card>
+<Card class={cn(trend === 'new' && 'border-primary/50')}>
 	<CardHeader>
-		<div class="flex w-full justify-between">
+		<div class="flex w-full items-center justify-between">
 			<CardTitle class="font-normal text-muted-foreground">
-				{title}
+				{name}
 			</CardTitle>
-			<Icon />
+			{#if trend === 'new'}
+				<CardDescription class="text-sm text-accent-foreground">New</CardDescription>
+			{/if}
 		</div>
 	</CardHeader>
 	<CardContent class="space-y-4">
-		<p class="text-3xl font-bold">{formatted}{suffix}</p>
+		<p class="text-3xl font-bold">{formatted}{unit}</p>
 
-		{#if subContent}
+		{#if delta}
 			<p
 				class={cn(
 					'flex items-center gap-2 text-sm font-semibold',
-					type === 'success' && 'text-success',
-					type === 'destructive' && 'text-destructive'
+					trend === 'up' && 'text-success',
+					trend === 'down' && 'text-destructive'
 				)}
 			>
-				<SubContentIcon />{subContent}
+				{#if trend == 'up'}
+					<ChartColumnIncreasing class="h-4 w-4 shrink-0" />
+				{:else if trend === 'down'}
+					<ChartColumnDecreasing class="h-4 w-4 shrink-0" />
+				{/if}
+				{delta}%
 			</p>
 		{/if}
 	</CardContent>
+	<CardFooter>
+		{#if summary_text}
+			<div class="flex items-center gap-2">
+				<Info class="h-4 w-4 shrink-0" color="var(--primary)" />
+
+				<p class="text-xs text-muted-foreground">{summary_text}</p>
+			</div>
+		{/if}
+	</CardFooter>
 </Card>

@@ -9,16 +9,7 @@
 		CardHeader,
 		CardTitle
 	} from '$lib/components/ui/card';
-	import {
-		Field,
-		FieldDescription,
-		FieldError,
-		FieldGroup,
-		FieldLabel,
-		FieldLegend,
-		FieldSeparator,
-		FieldSet
-	} from '$lib/components/ui/field';
+	import { Field, FieldError, FieldGroup, FieldLabel } from '$lib/components/ui/field';
 	import { Input } from '$lib/components/ui/input';
 	import { createForm } from '@tanstack/svelte-form';
 	import { loginSchema } from './loginFormSchema';
