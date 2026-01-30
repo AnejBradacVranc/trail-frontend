@@ -4,8 +4,6 @@ import type { FormFieldData } from '$lib/types/formFieldData';
 import type { SEO } from '$lib/types/seo';
 import type { LayoutLoad } from './$types';
 
-export const ssr = false;
-
 export const load: LayoutLoad = async ({
 	data
 }): Promise<{ seo: SEO; formFieldData: FormFieldData }> => {

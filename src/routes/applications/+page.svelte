@@ -103,15 +103,6 @@
 	<!--Table-->
 </section>
 
-<!-- Stats section-->
-<section class="container">
-	<!-- Search -->
-	<Card>
-		<CardContent>Stats</CardContent>
-	</Card>
-	<!--Table-->
-</section>
-
 <section class="container">
 	<JobApplicationForm {formFieldData} />
 </section>

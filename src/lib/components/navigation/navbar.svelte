@@ -1,11 +1,9 @@
 <script lang="ts">
 	import {
 		NavigationMenuRoot as NavigationMenu,
-		NavigationMenuContent,
 		NavigationMenuItem,
 		NavigationMenuLink,
-		NavigationMenuList,
-		NavigationMenuTrigger
+		NavigationMenuList
 	} from '$lib/components/ui/navigation-menu';
 	import { Plus } from '@lucide/svelte';
 	import { Button, buttonVariants } from '../ui/button';
@@ -29,7 +27,7 @@
 				<Dialog.Trigger>
 					<Button><Plus /><span>Add Application</span></Button>
 				</Dialog.Trigger>
-				<Dialog.Content class="max-h-[95vh] overflow-y-auto sm:max-w-[1000px]">
+				<Dialog.Content class="max-h-[95vh] overflow-y-auto sm:max-w-250">
 					<JobApplicationForm {formFieldData} />
 					<Dialog.Footer>
 						<Dialog.Close class={buttonVariants({ variant: 'outline' })}>Cancel</Dialog.Close>
