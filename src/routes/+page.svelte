@@ -10,9 +10,16 @@
 
 <section class="container">
 	<h1>Good morning, {user?.name}</h1>
-	<!--<p class="text-muted-foreground">
-		You have some things scheduled this week [dynamic summary text ?]
-	</p>-->
+	<p class="text-muted-foreground">
+		{#if inProgress.length > 0 || interviewing.length > 0 || offer.length > 0}
+			You have {inProgress.length}
+			{inProgress.length === 1 ? 'application' : 'applications'} in progress,
+			{interviewing.length} at the interview stage, and {offer.length}
+			{offer.length === 1 ? 'offer' : 'offers'} waiting for you.
+		{:else}
+			No applications yet. Start by adding your first job application!
+		{/if}
+	</p>
 </section>
 
 <section class="container">
@@ -24,21 +31,19 @@
 </section>
 
 <section class="container">
+	<h2>Overview</h2>
 	<div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
 		<div class="flex flex-col gap-4">
-			<h3>In Progress</h3>
 			{#each inProgress as aplInProg}
 				<DetailedInfoCard {...aplInProg} />
 			{/each}
 		</div>
 		<div class="flex flex-col gap-4">
-			<h3>Interviewing</h3>
 			{#each interviewing as aplInterview}
 				<DetailedInfoCard {...aplInterview} />
 			{/each}
 		</div>
 		<div class="flex flex-col gap-4">
-			<h3>Offer</h3>
 			{#each offer as aplOffer}
 				<DetailedInfoCard {...aplOffer} />
 			{/each}

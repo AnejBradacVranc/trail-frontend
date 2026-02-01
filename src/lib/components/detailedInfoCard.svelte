@@ -31,7 +31,7 @@
 </script>
 
 <Card>
-	<CardHeader>
+	<CardHeader class="flex w-full items-center justify-between">
 		<div class="flex flex-row items-center gap-4">
 			<Avatar>
 				<AvatarFallback>{company_name.charAt(0)}</AvatarFallback>
@@ -43,10 +43,16 @@
 				<CardDescription><span>{company_name}</span> - <span>{location}</span></CardDescription>
 			</div>
 		</div>
+		<p
+			class="w-fit rounded-md p-2 text-sm font-bold"
+			style={`color: ${status_color};background-color: color-mix(in oklab, ${status_color} 10%, transparent);`}
+		>
+			{status_name}
+		</p>
 	</CardHeader>
 	<CardContent class="flex flex-col gap-3 text-sm">
 		<div
-			class="flex flex-row items-center gap-4 rounded-md border border-success/10 bg-success/10 p-2"
+			class="flex flex-row items-center gap-4 rounded-md border border-success/5 bg-success/5 p-2"
 		>
 			<Banknote class="size-6" color="var(--success)" />
 			<div class="flex gap-1 text-success">
@@ -55,7 +61,7 @@
 		</div>
 		{#if interview_at}
 			<div
-				class="flex flex-row items-center gap-4 rounded-md border border-primary/10 bg-primary/10 p-2"
+				class="flex flex-row items-center gap-4 rounded-md border border-primary/5 bg-primary/5 p-2"
 			>
 				<CalendarIcon class="size-6" color="var(--primary)" />
 				<div class="flex flex-col text-primary">
@@ -67,7 +73,6 @@
 	</CardContent>
 	<CardFooter class="flex justify-between border-t">
 		<div class="flex flex-col gap-1">
-			<p class="text-sm" style={`color: ${status_color}`}>{status_name}</p>
 			<p class="text-sm text-muted-foreground">
 				Applied on {moment(applied_at).format('MMM D, YYYY')}
 			</p>
