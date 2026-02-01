@@ -17,6 +17,7 @@
 	import SidebarFooter from '../ui/sidebar/sidebar-footer.svelte';
 	import logo from '$lib/assets/logo.png';
 	import { page } from '$app/state';
+	import { cn } from '$lib/utils';
 
 	const pages = [
 		{
@@ -50,12 +51,20 @@
 	<SidebarContent>
 		<SidebarGroup>
 			<SidebarGroupLabel>For you</SidebarGroupLabel>
-
 			<SidebarGroupContent>
 				<SidebarMenu>
 					{#each pages as item (item.title)}
-						<SidebarMenuItem>
-							<SidebarMenuButton variant={`${item.url === page.route.id ? 'outline' : 'default'}`}>
+						{@const isActive = item.url === page.route.id}
+						<SidebarMenuItem class="font-base">
+							<SidebarMenuButton
+								variant={isActive ? 'outline' : 'default'}
+								class={cn(
+									'transition-colors duration-300',
+									isActive
+										? 'font-semibold hover:bg-sidebar-primary hover:text-sidebar-primary-foreground'
+										: ''
+								)}
+							>
 								<a href={item.url} class="flex items-center gap-4">
 									<svelte:component this={item.icon} />
 									<span>{item.title}</span>
@@ -68,8 +77,12 @@
 		</SidebarGroup>
 		<SidebarGroup>
 			<SidebarGroupLabel>Account</SidebarGroupLabel>
+			{@const isSettingsActive = page.route.id === '/settings'}
 			<SidebarMenuItem>
-				<SidebarMenuButton variant={`${page.route.id === '/settings' ? 'outline' : 'default'}`}>
+				<SidebarMenuButton
+					variant={isSettingsActive ? 'outline' : 'default'}
+					class={isSettingsActive ? 'hover:bg-primary hover:text-primary-foreground' : ''}
+				>
 					<a href="/settings" class="flex gap-4">
 						<svelte:component this={Settings} />
 						<span>Settings</span>

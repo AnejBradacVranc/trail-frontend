@@ -2,6 +2,6 @@
 	import RegisterForm from '$lib/components/forms/register/registerForm.svelte';
 </script>
 
-<div class="flex min-h-screen items-center justify-center">
+<div class="flex h-screen w-full items-start justify-center pt-32">
 	<RegisterForm />
 </div>

@@ -1,5 +1,5 @@
 <script lang="ts">
-	import DetailedInfoCard from '$lib/components/detailedInfoCard.svelte';
+	import ApplicationCard from '$lib/components/applicationCard.svelte';
 	import InfoCard from '$lib/components/infoCard.svelte';
 	import type { PageProps } from './$types';
 
@@ -35,17 +35,17 @@
 	<div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
 		<div class="flex flex-col gap-4">
 			{#each inProgress as aplInProg}
-				<DetailedInfoCard {...aplInProg} />
+				<ApplicationCard {...aplInProg} />
 			{/each}
 		</div>
 		<div class="flex flex-col gap-4">
 			{#each interviewing as aplInterview}
-				<DetailedInfoCard {...aplInterview} />
+				<ApplicationCard {...aplInterview} />
 			{/each}
 		</div>
 		<div class="flex flex-col gap-4">
 			{#each offer as aplOffer}
-				<DetailedInfoCard {...aplOffer} />
+				<ApplicationCard {...aplOffer} />
 			{/each}
 		</div>
 	</div>

@@ -9,15 +9,7 @@
 		CardHeader,
 		CardTitle
 	} from '$lib/components/ui/card';
-	import {
-		Field,
-		FieldDescription,
-		FieldGroup,
-		FieldLabel,
-		FieldLegend,
-		FieldSeparator,
-		FieldSet
-	} from '$lib/components/ui/field';
+	import { Field, FieldGroup, FieldLabel } from '$lib/components/ui/field';
 	import FieldError from '$lib/components/ui/field/field-error.svelte';
 	import { Input } from '$lib/components/ui/input';
 	import { createForm } from '@tanstack/svelte-form';
@@ -28,7 +20,8 @@
 			email: '',
 			name: '',
 			surname: '',
-			password: ''
+			password: '',
+			repeatPassword: ''
 		},
 		validators: {
 			onSubmit: registerSchema
@@ -136,6 +129,30 @@
 								id="password"
 								type="password"
 								placeholder="Enter your password"
+							/>
+							{#if field.state.meta.isTouched && !field.state.meta.isValid}
+								<FieldError errors={field.state.meta.errors as any} />
+							{/if}
+						</Field>
+					{/snippet}
+				</form.Field>
+				<form.Field name="repeatPassword">
+					<!-- validators={{
+						onChange: ({ value }) => (value.length < 3 ? { message: 'Not long enough' } : undefined)
+					}}
+						-->
+					{#snippet children(field)}
+						<Field>
+							<FieldLabel for="repeatPassword">Repeat Password</FieldLabel>
+							<Input
+								bind:value={field.state.value}
+								oninput={(e) => {
+									const target = e.target as HTMLInputElement;
+									field.handleChange(target.value);
+								}}
+								id="repeatPassword"
+								type="password"
+								placeholder="Enter your password again"
 							/>
 							{#if field.state.meta.isTouched && !field.state.meta.isValid}
 								<FieldError errors={field.state.meta.errors as any} />

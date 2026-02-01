@@ -7,6 +7,7 @@
 	import Navbar from '$lib/components/navigation/navbar.svelte';
 	import { SidebarProvider, SidebarTrigger } from '$lib/components/ui/sidebar';
 	import type { LayoutProps } from './$types';
+	import { fade } from 'svelte/transition';
 
 	let { children, data }: LayoutProps = $props();
 
@@ -34,9 +35,10 @@
 		{#if user}
 			<SidebarTrigger />
 		{/if}
-		<div class="flex w-full flex-col items-center gap-8 py-8">
-			{@render children()}
-		</div>
+		{#key page.url.pathname}
+			<div class="flex w-full flex-col items-center gap-8 py-8" in:fade>
+				{@render children()}
+			</div>{/key}
 	</main>
 </SidebarProvider>
 
