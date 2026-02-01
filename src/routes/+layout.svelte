@@ -7,11 +7,22 @@
 	import Navbar from '$lib/components/navigation/navbar.svelte';
 	import { SidebarProvider, SidebarTrigger } from '$lib/components/ui/sidebar';
 	import type { LayoutProps } from './$types';
-	import { fade } from 'svelte/transition';
+	import { onNavigate } from '$app/navigation';
 
 	let { children, data }: LayoutProps = $props();
 
 	const { seo, formFieldData, user } = $derived(data);
+
+	onNavigate((navigation) => {
+		if (!document.startViewTransition) return;
+
+		return new Promise((resolve) => {
+			document.startViewTransition(async () => {
+				resolve();
+				await navigation.complete;
+			});
+		});
+	});
 </script>
 
 <svelte:head>
@@ -35,10 +46,9 @@
 		{#if user}
 			<SidebarTrigger />
 		{/if}
-		{#key page.url.pathname}
-			<div class="flex w-full flex-col items-center gap-8 py-8" in:fade>
-				{@render children()}
-			</div>{/key}
+		<div class="flex w-full flex-col items-center gap-8 py-8">
+			{@render children()}
+		</div>
 	</main>
 </SidebarProvider>
 
