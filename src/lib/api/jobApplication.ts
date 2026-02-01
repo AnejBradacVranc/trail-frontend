@@ -3,7 +3,7 @@ import type { ApplicationSummary } from '$lib/types/jobApplication';
 import type { GenericResponse } from '$lib/types/genericResponse';
 import type { JobApplicationFormValues } from '$lib/components/forms/jobApplication/jobApplicationSchema';
 
-export const getJobApplicationsForUser = async () => {
+export const getJobApplicationsForUser = async (...statusIds: number[]) => {
 	return axiosInstance
 		.get<GenericResponse<ApplicationSummary[]>>(`/user/applications`)
 		.catch((error) => {

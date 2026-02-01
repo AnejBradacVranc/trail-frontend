@@ -39,8 +39,8 @@
 		{/each}
 		<NavigationMenuItem>
 			<Dialog.Root>
-				<Dialog.Trigger>
-					<Button><Plus /><span>Add Application</span></Button>
+				<Dialog.Trigger class={buttonVariants()}>
+					<Plus /><span>Add Application</span>
 				</Dialog.Trigger>
 				<Dialog.Content class="max-h-[95vh] overflow-y-auto sm:max-w-250">
 					<JobApplicationForm {formFieldData} />

@@ -24,11 +24,15 @@
 	let animatedValue = new Tween(0, { duration: 2000, easing: quintOut });
 
 	let formatted = $derived(
-		value % 1 != 0 ? animatedValue.current.toFixed(2) : animatedValue.current.toFixed()
+		value !== null
+			? value % 1 != 0
+				? animatedValue.current.toFixed(2)
+				: animatedValue.current.toFixed()
+			: 0
 	);
 
 	onMount(() => {
-		animatedValue.set(value);
+		animatedValue.set(value ?? 0);
 	});
 </script>
 
@@ -59,7 +63,7 @@
 				{:else if trend === 'down'}
 					<ChartColumnDecreasing class="h-4 w-4 shrink-0" />
 				{/if}
-				{delta}%
+				{delta}% from last month
 			</p>
 		{/if}
 	</CardContent>

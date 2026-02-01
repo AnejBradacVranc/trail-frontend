@@ -1,6 +1,6 @@
 export interface StatisticSummary {
 	name: string;
-	value: number;
+	value: number | null;
 	unit: string | null;
 	delta: number | null;
 	period: string;

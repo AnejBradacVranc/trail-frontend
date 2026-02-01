@@ -2,10 +2,13 @@ export interface ApplicationSummary {
 	application_id: number;
 	job_title: string;
 	applied_at: string;
+	interview_at: string | null;
 	status_name: string;
+	status_color: string;
 	salary_max: number;
 	salary_min: number;
 	location: string;
+	status_id: number;
 	company_name: string;
 }
 
