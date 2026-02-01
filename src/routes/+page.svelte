@@ -8,12 +8,21 @@
 
 <section class="container">
 	<h1>Good morning, {user?.name}</h1>
-	<p class="text-muted-foreground">
+	<!--<p class="text-muted-foreground">
 		You have some things scheduled this week [dynamic summary text ?]
-	</p>
+	</p>-->
 </section>
 
 <section class="container">
+	<div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
+		{#each statistics.summary as summary}
+			<InfoCard {...summary} />
+		{/each}
+	</div>
+</section>
+
+<section class="container">
+	<h2>Overview</h2>
 	<div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
 		{#each statistics.summary as summary}
 			<InfoCard {...summary} />

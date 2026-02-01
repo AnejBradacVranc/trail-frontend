@@ -130,6 +130,9 @@
 	h2 {
 		@apply text-3xl font-semibold;
 	}
+	.container {
+		@apply flex flex-col gap-4;
+	}
 	h3 {
 		@apply text-2xl font-semibold;
 	}

@@ -1,13 +1,19 @@
+// src/hooks.server.ts
 import type { Handle } from '@sveltejs/kit';
-import { paraglideMiddleware } from '$lib/paraglide/server';
 
-const handleParaglide: Handle = ({ event, resolve }) =>
-	paraglideMiddleware(event.request, ({ request, locale }) => {
-		event.request = request;
+const API_URL = 'http://localhost:8080';
 
-		return resolve(event, {
-			transformPageChunk: ({ html }) => html.replace('%paraglide.lang%', locale)
+export const handle: Handle = async ({ event, resolve }) => {
+	if (event.url.pathname.startsWith('/api')) {
+		const url = API_URL + event.url.pathname.replace('/api', '');
+
+		return fetch(url, {
+			method: event.request.method,
+			headers: event.request.headers,
+			body: event.request.body,
+			credentials: 'include'
 		});
-	});
+	}
 
-export const handle: Handle = handleParaglide;
+	return resolve(event);
+};
