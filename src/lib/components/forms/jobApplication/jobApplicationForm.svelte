@@ -18,8 +18,6 @@
 		Briefcase,
 		Building2,
 		CalendarIcon,
-		CircleAlert,
-		CircleCheck,
 		Link,
 		MapPin,
 		PersonStanding,
@@ -41,12 +39,21 @@
 	import { Slider } from '$lib/components/ui/slider';
 	import { addJobApplication } from '$lib/api/jobApplication';
 	import type { FormFieldData } from '$lib/types/formFieldData';
-	import { Alert, AlertDescription, AlertTitle } from '$lib/components/ui/alert';
-	import { is, th } from 'zod/v4/locales';
+	import FormSubmissionAlert from '$lib/components/formSubmissionAlert.svelte';
+
+	const { formFieldData }: { formFieldData: FormFieldData } = $props();
+
+	const statusLabels = $derived(formFieldData.applicationStatuses.iterable);
+	const statusLabelsMap = $derived(formFieldData.applicationStatuses.keyValue);
+
+	const platformLabels = $derived(formFieldData.platforms.iterable);
+	const platformLabelsMap = $derived(formFieldData.platforms.keyValue);
+
+	let isSubmitSuccessful: boolean | null = $state(null);
+	let isLoading = $state(false);
 
 	const form = createForm(() => ({
 		defaultValues: {
-			userId: 1, //TODO replace with actual user id
 			jobTitle: '',
 			companyName: '',
 			jobUrl: '',
@@ -85,22 +92,8 @@
 		}
 	}));
 
-	//TODO for application status there needs to be id
-	//TODO get user id and add it to payload
-
-	const { formFieldData }: { formFieldData: FormFieldData } = $props();
-
-	const statusLabels = $derived(formFieldData.applicationStatuses.iterable);
-	const statusLabelsMap = $derived(formFieldData.applicationStatuses.keyValue);
-
-	const platformLabels = $derived(formFieldData.platforms.iterable);
-	const platformLabelsMap = $derived(formFieldData.platforms.keyValue);
-
 	const minSalary = form.useStore((state) => state.values.minSalary);
 	const maxSalary = form.useStore((state) => state.values.maxSalary);
-
-	let isSubmitSuccessful: boolean | null = $state(null);
-	let isLoading = $state(false);
 </script>
 
 <Card>
@@ -442,25 +435,12 @@
 	</CardFooter>
 
 	{#if isSubmitSuccessful !== null}
-		<div class="max-w-xl space-y-4 self-end p-4">
-			{#if isSubmitSuccessful}
-				<Alert variant="default" class="border-success/50">
-					<CircleCheck color="var(--success)" />
-					<AlertTitle>New application added successfully!</AlertTitle>
-					<AlertDescription
-						>You can now view and manage this application in the job applications list.</AlertDescription
-					>
-				</Alert>
-			{/if}
-			{#if !isSubmitSuccessful}
-				<Alert class="border-destructive/50">
-					<CircleAlert color="var(--destructive)" />
-					<AlertTitle>Unable to add application</AlertTitle>
-					<AlertDescription>
-						<p>Try again later. If the problem persists, contact support.</p>
-					</AlertDescription>
-				</Alert>
-			{/if}
-		</div>
+		<FormSubmissionAlert
+			{isSubmitSuccessful}
+			successTitle="New application added successfully!"
+			successDescription="You can now view and manage this application in the job applications list."
+			errorTitle="Unable to add application"
+			errorDescription="Try again later. If the problem persists, contact support."
+		/>
 	{/if}
 </Card>

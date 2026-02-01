@@ -13,6 +13,11 @@
 	import { Input } from '$lib/components/ui/input';
 	import { createForm } from '@tanstack/svelte-form';
 	import { loginSchema } from './loginFormSchema';
+	import { login } from '$lib/api/user';
+	import FormSubmissionAlert from '$lib/components/formSubmissionAlert.svelte';
+	import { goto } from '$app/navigation';
+
+	let isSubmitSuccessful: boolean | null = $state(null);
 
 	const form = createForm(() => ({
 		defaultValues: {
@@ -22,8 +27,25 @@
 		validators: {
 			onSubmit: loginSchema
 		},
-		onSubmit: (values) => {
-			console.log('Form submitted with values:', values);
+		onSubmit: async ({ value }) => {
+			try {
+				const { data } = await login(value.email, value.password);
+
+				if (data.success) {
+					//console.log('Success! Application ID:', data.data?.id);
+
+					isSubmitSuccessful = true;
+					setTimeout(() => {
+						goto('/');
+					}, 2000);
+				} else {
+					console.error('Error:', data.data.message);
+					isSubmitSuccessful = false;
+				}
+			} catch (error) {
+				console.error('Submission error:', error);
+				isSubmitSuccessful = false;
+			}
 		}
 	}));
 </script>
@@ -92,4 +114,14 @@
 	<CardFooter>
 		<Button type="submit" form="loginForm">Login</Button>
 	</CardFooter>
+
+	{#if isSubmitSuccessful !== null}
+		<FormSubmissionAlert
+			{isSubmitSuccessful}
+			successTitle="Welcome back!"
+			successDescription="You've successfully logged in. Redirecting to your dashboard..."
+			errorTitle="Login failed"
+			errorDescription="Invalid email or password. Please check your credentials and try again."
+		/>
+	{/if}
 </Card>

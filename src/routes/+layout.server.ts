@@ -1,3 +1,5 @@
+import { check } from '$lib/api/user';
+import type { AuthUser } from '$lib/types/auth';
 import type { SEO } from '$lib/types/seo';
 import type { LayoutServerLoad } from './$types';
 

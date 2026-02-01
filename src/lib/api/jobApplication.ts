@@ -3,9 +3,9 @@ import type { ApplicationSummary } from '$lib/types/jobApplication';
 import type { GenericResponse } from '$lib/types/genericResponse';
 import type { JobApplicationFormValues } from '$lib/components/forms/jobApplication/jobApplicationSchema';
 
-export const getJobApplicationsForUserByEmail = async (email: string) => {
+export const getJobApplicationsForUser = async () => {
 	return axiosInstance
-		.get<GenericResponse<ApplicationSummary[]>>(`/user/applications?user_email=${email}`)
+		.get<GenericResponse<ApplicationSummary[]>>(`/user/applications`)
 		.catch((error) => {
 			console.error('Error fetching job applications:', error);
 			throw error;
@@ -23,7 +23,6 @@ export const addJobApplication = async (data: JobApplicationFormValues) => {
 		status_id: parseInt(data.applicationStatusId) || 1,
 		applied_at: data.dateApplied,
 		note_content: data.notes,
-		user_id: data.userId,
 		platform_id: parseInt(data.platformId) || 1
 	};
 

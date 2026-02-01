@@ -4,6 +4,10 @@ export interface SuccessResponse<T> {
 	data: T | null;
 }
 
+export interface Message {
+	message: string;
+}
+
 export interface ErrorResponse {
 	success: false;
 	code: number;

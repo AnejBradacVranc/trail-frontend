@@ -3,33 +3,26 @@ import { getPlatforms } from '$lib/api/platforms';
 import type { FormFieldData } from '$lib/types/formFieldData';
 import type { SEO } from '$lib/types/seo';
 import type { LayoutLoad } from './$types';
+import type { AuthUser } from '$lib/types/auth';
+import { check } from '$lib/api/user';
+import { goto } from '$app/navigation';
 
 export const load: LayoutLoad = async ({
-	data
-}): Promise<{ seo: SEO; formFieldData: FormFieldData }> => {
-	let statuses;
-	let statusLabelsMap = new Map<string, string>();
+	data,
+	url
+}): Promise<{ seo: SEO; formFieldData: FormFieldData; user: AuthUser | null }> => {
+	const PUBLIC_ROUTES = ['/login', '/register'];
 
-	let platforms;
+	let statusLabelsMap = new Map<string, string>();
 	let platformsMap = new Map<string, string>();
+	let statuses;
+	let platforms;
+	let authUser;
 
 	try {
 		statuses = await getApplicationStatuses();
 		platforms = await getPlatforms();
-
-		if (!statuses.data.success) {
-			console.error(
-				'Error fetching application statuses in layout load',
-				statuses.data.data.message
-			);
-		}
-
-		if (!platforms.data.success) {
-			console.error(
-				'Error fetching application platforms in layout load',
-				platforms.data.data.message
-			);
-		}
+		authUser = await check();
 
 		if (statuses?.data.success && statuses.data.data) {
 			statusLabelsMap = new Map(
@@ -42,8 +35,14 @@ export const load: LayoutLoad = async ({
 				platforms.data.data.map((platform) => [platform.platform_id.toString(), platform.name])
 			);
 		}
+
+		const isPublicRoute = PUBLIC_ROUTES.some((route) => url.pathname === route);
+
+		if (authUser.status === 401 && !isPublicRoute) {
+			goto('/login');
+		}
 	} catch (error) {
-		console.error('Error fetching application statuses and platforms in layout load:', error);
+		console.error('Error fetching data in root layout:', error);
 	}
 
 	return {
@@ -57,6 +56,7 @@ export const load: LayoutLoad = async ({
 				keyValue: platformsMap,
 				iterable: platforms?.data.success ? platforms.data.data || [] : []
 			}
-		}
+		},
+		user: authUser?.data.success ? authUser?.data.data : null
 	};
 };

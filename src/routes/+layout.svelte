@@ -10,7 +10,7 @@
 
 	let { children, data }: LayoutProps = $props();
 
-	const { seo, formFieldData } = $derived(data);
+	const { seo, formFieldData, user } = $derived(data);
 </script>
 
 <svelte:head>
@@ -23,11 +23,17 @@
 	<meta property="og:image" content={seo.image} />
 </svelte:head>
 
-<Navbar {formFieldData} />
+{#if user}
+	<Navbar {formFieldData} />
+{/if}
 <SidebarProvider open={true}>
-	<Sidebar />
+	{#if user}
+		<Sidebar />
+	{/if}
 	<main class="flex w-full">
-		<SidebarTrigger />
+		{#if user}
+			<SidebarTrigger />
+		{/if}
 		<div class="flex w-full flex-col items-center gap-8 px-4 py-8 md:px-6 lg:px-8">
 			{@render children()}
 		</div>

@@ -1,16 +1,15 @@
 <script lang="ts">
 	import InfoCard from '$lib/components/infoCard.svelte';
-	import { ChartColumnDecreasing, ChartColumnIncreasing, Send } from '@lucide/svelte';
 	import type { PageProps } from './$types';
 
 	const { data }: PageProps = $props();
-	const { statistics } = $derived(data);
+	const { statistics, user } = $derived(data);
 </script>
 
 <section class="container">
-	<h1>Good morning,</h1>
+	<h1>Good morning, {user?.name}</h1>
 	<p class="text-muted-foreground">
-		You have some things scheduled this week (dynamic summary text ?)
+		You have some things scheduled this week [dynamic summary text ?]
 	</p>
 </section>
 
