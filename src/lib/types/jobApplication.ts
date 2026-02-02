@@ -1,3 +1,5 @@
+import type { Platform } from './platforms';
+
 export interface ApplicationSummary {
 	application_id: number;
 	job_title: string;
@@ -15,27 +17,49 @@ export interface ApplicationSummary {
 export interface ApplicationDetail {
 	application_id: number;
 	job_title: string;
-	platform: string;
-	job_url?: string;
-	salary_min?: number;
-	salary_max?: number;
+	platform: Platform;
+	job_url: string | null;
+	salary_min: number;
+	salary_max: number;
 	created_at: string;
+	applied_at: string;
 	modified_at: string;
 
 	status_name: string;
+	status_color: string;
 
 	company: CompanyDetail;
+	company_contact: CompanyContact | null;
 
 	events: ApplicationEvent[];
 	notes: Note[];
 	files: File[];
 }
 
-interface ApplicationEvent {
+interface CompanyContact {
+	company_contact_id: number;
+	name: string;
+	surname: string;
+	email: string | null;
+	phone: string | null;
+	role: string | null;
+	created_at: string;
+	modified_at: string;
+}
+
+export interface ApplicationEvent {
 	event_id: number;
 	application_id: number;
-	event_type: string;
-	note?: string;
+	event_type:
+		| 'applied'
+		| 'recruiter_contacted'
+		| 'phone_screen'
+		| 'interview'
+		| 'offer'
+		| 'rejected'
+		| 'withdrawn'
+		| 'accepted';
+	note: string | null;
 	event_start_time: string;
 	event_est_end_time?: string;
 	created_at: string;
@@ -44,8 +68,9 @@ interface ApplicationEvent {
 interface CompanyDetail {
 	company_id: number;
 	name: string;
-	headquarters_location?: string;
-	employees_count?: number;
+	headquarters_location: string | null;
+	employees_count: number | null;
+	website: string | null;
 }
 
 interface Note {
@@ -54,7 +79,7 @@ interface Note {
 	note_content?: string;
 }
 
-interface File {
+export interface File {
 	file_id: number;
 	application_id: number;
 	filename: string;

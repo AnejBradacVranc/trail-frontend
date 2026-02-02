@@ -1,11 +1,25 @@
 import { axiosInstance } from './axios';
-import type { ApplicationSummary } from '$lib/types/jobApplication';
+import type { ApplicationDetail, ApplicationSummary } from '$lib/types/jobApplication';
 import type { GenericResponse } from '$lib/types/genericResponse';
 import type { JobApplicationFormValues } from '$lib/components/forms/jobApplication/jobApplicationSchema';
 
-export const getJobApplicationsForUser = async (...statusIds: number[]) => {
+export const getJobApplications = async (...statusIds: number[]) => {
+	const params = new URLSearchParams();
+
+	statusIds.forEach((id) => {
+		params.append('status_id', id.toString());
+	});
+
 	return axiosInstance
-		.get<GenericResponse<ApplicationSummary[]>>(`/user/applications`)
+		.get<GenericResponse<ApplicationSummary[]>>(`/applications?${params.toString()}`)
+		.catch((error) => {
+			console.error('Error fetching job applications:', error);
+			throw error;
+		});
+};
+export const getJobApplication = async (applicationId: number) => {
+	return axiosInstance
+		.get<GenericResponse<ApplicationDetail>>(`/applications/${applicationId}`)
 		.catch((error) => {
 			console.error('Error fetching job applications:', error);
 			throw error;

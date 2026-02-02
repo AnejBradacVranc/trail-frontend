@@ -1,7 +1,7 @@
 import type { PageLoad } from './$types';
 import { getStatsSummary } from '$lib/api/statistics';
 import type { StatisticSummary } from '$lib/types/statistics';
-import { getJobApplicationsForUser } from '$lib/api/jobApplication';
+import { getJobApplications } from '$lib/api/jobApplication';
 import type { ApplicationSummary } from '$lib/types/jobApplication';
 
 export const load: PageLoad = async (): Promise<{
@@ -16,7 +16,7 @@ export const load: PageLoad = async (): Promise<{
 	let applicationsResp;
 	try {
 		statisticsResp = await getStatsSummary();
-		applicationsResp = await getJobApplicationsForUser(2, 3, 4);
+		applicationsResp = await getJobApplications(2, 3, 4);
 	} catch (error) {
 		console.error('Error fetching statistics summaries:', error);
 	}
