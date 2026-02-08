@@ -6,35 +6,30 @@ import type { ApplicationSummary } from '$lib/types/jobApplication';
 
 export const load: PageLoad = async (): Promise<{
 	statistics: { summary: StatisticSummary[] };
-	applications: {
-		inProgress: ApplicationSummary[];
-		interviewing: ApplicationSummary[];
-		offer: ApplicationSummary[];
-	};
+	applications: ApplicationSummary[][];
 }> => {
+	const STATUS_IDS = [1, 2, 3];
+
 	let statisticsResp;
 	let applicationsResp;
 	try {
 		statisticsResp = await getStatsSummary();
-		applicationsResp = await getJobApplications(2, 3, 4);
+		applicationsResp = await getJobApplications(...STATUS_IDS);
 	} catch (error) {
 		console.error('Error fetching statistics summaries:', error);
 	}
+
+	const allApplications = applicationsResp?.data.success ? applicationsResp.data.data || [] : [];
+
+	//TODO maybe add so BE already returns grouped if ids provided
+	const groupedApplications = STATUS_IDS.map((statusId) =>
+		allApplications.filter((el) => el.status_id === statusId)
+	);
 
 	return {
 		statistics: {
 			summary: statisticsResp?.data.success ? statisticsResp.data.data || [] : []
 		},
-		applications: {
-			inProgress: applicationsResp?.data.success
-				? applicationsResp.data.data?.filter((el) => el.status_id === 2) || []
-				: [],
-			interviewing: applicationsResp?.data.success
-				? applicationsResp.data.data?.filter((el) => el.status_id === 3) || []
-				: [],
-			offer: applicationsResp?.data.success
-				? applicationsResp.data.data?.filter((el) => el.status_id === 4) || []
-				: []
-		}
+		applications: groupedApplications
 	};
 };

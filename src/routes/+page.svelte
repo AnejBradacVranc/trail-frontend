@@ -5,17 +5,19 @@
 
 	const { data }: PageProps = $props();
 	const { statistics, user, applications } = $derived(data);
-	const { inProgress, interviewing, offer } = $derived(applications);
+	
+	const totalApplications = $derived(
+		applications.reduce((sum, group) => sum + group.length, 0)
+	);
 </script>
 
 <section class="container">
 	<h1>Good morning, {user?.name}</h1>
 	<p class="text-muted-foreground">
-		{#if inProgress.length > 0 || interviewing.length > 0 || offer.length > 0}
-			You have {inProgress.length}
-			{inProgress.length === 1 ? 'application' : 'applications'} in progress,
-			{interviewing.length} at the interview stage, and {offer.length}
-			{offer.length === 1 ? 'offer' : 'offers'} waiting for you.
+		{#if totalApplications > 0}
+			You have {totalApplications}
+			{totalApplications === 1 ? 'application' : 'applications'} across {applications.length}
+			{applications.length === 1 ? 'status' : 'statuses'}.
 		{:else}
 			No applications yet. Start by adding your first job application!
 		{/if}
@@ -24,7 +26,7 @@
 
 <section class="container">
 	<div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
-		{#each statistics.summary as summary}
+		{#each statistics.summary as summary (summary.name)}
 			<InfoCard {...summary} />
 		{/each}
 	</div>
@@ -33,20 +35,12 @@
 <section class="container">
 	<h2>Overview</h2>
 	<div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
-		<div class="flex flex-col gap-4">
-			{#each inProgress as aplInProg}
-				<ApplicationCard {...aplInProg} />
-			{/each}
-		</div>
-		<div class="flex flex-col gap-4">
-			{#each interviewing as aplInterview}
-				<ApplicationCard {...aplInterview} />
-			{/each}
-		</div>
-		<div class="flex flex-col gap-4">
-			{#each offer as aplOffer}
-				<ApplicationCard {...aplOffer} />
-			{/each}
-		</div>
+		{#each applications as applicationGroup, index (index)}
+			<div class="flex flex-col gap-4">
+				{#each applicationGroup as application (application.application_id)}
+					<ApplicationCard {...application} />
+				{/each}
+			</div>
+		{/each}
 	</div>
 </section>
