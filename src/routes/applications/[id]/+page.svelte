@@ -18,8 +18,12 @@
 		Phone,
 		Briefcase,
 		CircleCheck,
-		CircleSlash
+		CircleSlash,
+		Bell,
+		Clock
 	} from '@lucide/svelte';
+	import * as Tabs from '$lib/components/ui/tabs/index.js';
+
 	import CardContent from '$lib/components/ui/card/card-content.svelte';
 	import CardFooter from '$lib/components/ui/card/card-footer.svelte';
 	import ApplicationFileCard from '$lib/components/applicationFileCard.svelte';
@@ -53,7 +57,7 @@
 					</div>
 				</div>
 				<div class="flex gap-2">
-					<Button variant="secondary"><Calendar /> Set reminder</Button>
+					<Button variant="secondary"><Calendar /> Create reminder</Button>
 					<Button><Pencil /> Edit application</Button>
 				</div>
 			</div>
@@ -73,9 +77,9 @@
 						>{application?.status_name}</span
 					>
 				</CardContent>
-				<CardFooter>
+				<!--<CardFooter>
 					<p class="text-sm text-muted-foreground">Some description</p>
-				</CardFooter>
+				</CardFooter>-->
 			</Card>
 			<Card class="gap-2">
 				<CardHeader>
@@ -88,9 +92,89 @@
 					<p class="text-sm text-muted-foreground">Yearly estimated salary</p>
 				</CardFooter>
 			</Card>
+
 			<Card class="col-span-2">
 				<CardContent>
-					<Timeline timeline={application?.events || []} />
+					<Tabs.Root value="timeline">
+						<Tabs.List class="bg-card">
+							<Tabs.Trigger
+								value="timeline"
+								class="p-4 text-lg hover:shadow-sm data-[state=active]:bg-secondary data-[state=active]:text-secondary-foreground"
+								>Timeline</Tabs.Trigger
+							>
+							<Tabs.Trigger
+								value="reminders"
+								class="p-4 text-lg hover:shadow-sm data-[state=active]:bg-secondary data-[state=active]:text-secondary-foreground"
+								>Reminders</Tabs.Trigger
+							>
+						</Tabs.List>
+						<Tabs.Content value="timeline">
+							<Card class="border-none shadow-none">
+								<CardContent class="flex flex-col gap-6">
+									<Timeline timeline={application?.events || []} />
+									{#if application?.notes && application?.notes.length > 0}
+										<div class="flex flex-col gap-6">
+											<h4>Attached notes</h4>
+											{#each application?.notes as note}
+												<div class="rounded-md bg-secondary p-4 text-secondary-foreground">
+													{@html note.note_content}
+												</div>
+											{/each}
+										</div>
+									{/if}
+								</CardContent>
+							</Card>
+						</Tabs.Content>
+						<Tabs.Content value="reminders">
+							<Card class="border-none shadow-none">
+								<CardContent class="flex flex-col gap-6">
+									<div class="flex flex-col gap-8">
+										{#if application?.reminders && application?.reminders.length > 0}
+											{#each application?.reminders as reminder}
+												<div class="flex items-center justify-between border-b border-border pb-4">
+													<div class="flex items-center gap-6">
+														{#if reminder.is_completed}
+															<CircleCheck class="text-success" />
+														{:else}
+															<Bell class="text-blue-600" />
+														{/if}
+														<div class="flex flex-col gap-2">
+															<p class="font-semibold">{reminder.title}</p>
+															{#if reminder.description}
+																<p class="text-sm text-muted-foreground">
+																	{reminder.description}
+																</p>
+															{/if}
+															<p class="text-muted-foreground">
+																{moment(reminder.remind_at).format('MMM D, YYYY, h:mm A')}
+															</p>
+														</div>
+													</div>
+													<div>
+														{#if reminder.is_completed}
+															<p
+																class="rounded-xl bg-green-50 p-2 font-bold text-green-600 uppercase"
+															>
+																Completed
+															</p>
+														{:else}
+															<p
+																class="rounded-xl bg-blue-50 p-2 font-bold text-blue-600 uppercase"
+															>
+																Pending
+															</p>
+														{/if}
+													</div>
+												</div>
+											{/each}
+										{:else}
+											<p class="text-muted-foreground">No reminders yet</p>
+										{/if}
+									</div>
+								</CardContent>
+							</Card>
+						</Tabs.Content>
+					</Tabs.Root>
 				</CardContent>
 			</Card>
 		</div>
@@ -225,7 +309,21 @@
 					</CardFooter>
 				{/if}
 			</Card>
-			<Card></Card>
+
+			{#if application?.interview_at}
+				<Card class="bg-secondary text-secondary-foreground">
+					<CardHeader>
+						<CardTitle class="text-xl font-bold text-primary">UPCOMING INTERVIEW</CardTitle>
+					</CardHeader>
+					<CardContent class="flex flex-col gap-6 text-lg font-semibold">
+						<div class="flex w-full items-center gap-4">
+							<Calendar />
+							<p>{moment(application?.interview_at).format('MMM D, YYYY')}</p>
+						</div>
+						<Button variant="default">View reminder</Button>
+					</CardContent>
+				</Card>
+			{/if}
 		</div>
 	</div>
 </section>

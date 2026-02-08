@@ -1,4 +1,5 @@
 import type { Platform } from './platforms';
+import type { Reminder } from './reminders';
 
 export interface ApplicationSummary {
 	application_id: number;
@@ -22,6 +23,7 @@ export interface ApplicationDetail {
 	salary_min: number;
 	salary_max: number;
 	created_at: string;
+	interview_at: string;
 	applied_at: string;
 	modified_at: string;
 
@@ -34,6 +36,7 @@ export interface ApplicationDetail {
 	events: ApplicationEvent[];
 	notes: Note[];
 	files: File[];
+	reminders: Reminder[];
 }
 
 interface CompanyContact {
@@ -76,7 +79,7 @@ interface CompanyDetail {
 interface Note {
 	note_id: number;
 	application_id: number;
-	note_content?: string;
+	note_content: string;
 }
 
 export interface File {

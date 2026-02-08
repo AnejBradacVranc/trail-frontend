@@ -10,8 +10,7 @@
 		SidebarMenu,
 		SidebarMenuButton,
 		SidebarMenuItem,
-		SidebarSeparator,
-		SidebarTrigger
+		SidebarSeparator
 	} from '$lib/components/ui/sidebar';
 	import SidebarHeader from '../ui/sidebar/sidebar-header.svelte';
 	import SidebarFooter from '../ui/sidebar/sidebar-footer.svelte';

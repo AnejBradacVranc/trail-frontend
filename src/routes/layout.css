@@ -131,7 +131,7 @@
 		@apply text-3xl font-semibold;
 	}
 	.container {
-		@apply flex flex-col gap-4;
+		@apply flex w-full max-w-full flex-col gap-4 px-2 md:px-4;
 	}
 	h3 {
 		@apply text-2xl font-semibold;

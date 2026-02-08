@@ -5,12 +5,13 @@
 		NavigationMenuLink,
 		NavigationMenuList
 	} from '$lib/components/ui/navigation-menu';
-	import { Plus } from '@lucide/svelte';
+	import { Menu, Plus } from '@lucide/svelte';
 	import { Button, buttonVariants } from '../ui/button';
 	import * as Dialog from '$lib/components/ui/dialog/index.js';
 	import JobApplicationForm from '../forms/jobApplication/jobApplicationForm.svelte';
 	import { logout } from '$lib/api/user';
 	import { goto } from '$app/navigation';
+	import SidebarTrigger from '../ui/sidebar/sidebar-trigger.svelte';
 
 	const navItems: { href: string; label: string }[] = [];
 
@@ -30,7 +31,7 @@
 	};
 </script>
 
-<NavigationMenu class=" justify-end">
+<NavigationMenu class="justify-end">
 	<NavigationMenuList>
 		{#each navItems as item}
 			<NavigationMenuItem>
