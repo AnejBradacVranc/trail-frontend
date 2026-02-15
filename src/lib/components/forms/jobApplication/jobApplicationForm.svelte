@@ -41,7 +41,8 @@
 	import type { FormFieldData } from '$lib/types/formFieldData';
 	import FormSubmissionAlert from '$lib/components/formSubmissionAlert.svelte';
 
-	const { formFieldData }: { formFieldData: FormFieldData } = $props();
+	const { formFieldData, onSuccess }: { formFieldData: FormFieldData; onSuccess?: () => void } =
+		$props();
 
 	const statusLabels = $derived(formFieldData.applicationStatuses.iterable);
 	const statusLabelsMap = $derived(formFieldData.applicationStatuses.keyValue);
@@ -79,6 +80,9 @@
 				if (data.success) {
 					console.log('Success! Application ID:', data.data?.id);
 					isSubmitSuccessful = true;
+					if (onSuccess) {
+						onSuccess();
+					}
 				} else {
 					console.error('Error:', data.data.message);
 					isSubmitSuccessful = false;
@@ -430,7 +434,7 @@
 	<CardFooter class="flex justify-end gap-3">
 		<Button type="submit" form="jobApplicationForm">
 			<Save />
-			Save Application
+			{isLoading ? 'Saving...' : 'Save Application'}
 		</Button>
 	</CardFooter>
 

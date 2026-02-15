@@ -17,7 +17,7 @@
 	import { SearchIcon, Sheet } from '@lucide/svelte';
 	import type { PageProps } from './$types';
 	import JobApplicationForm from '$lib/components/forms/jobApplication/jobApplicationForm.svelte';
-	import { goto } from '$app/navigation';
+	import { goto, invalidateAll } from '$app/navigation';
 
 	const { data }: PageProps = $props();
 
@@ -104,5 +104,10 @@
 </section>
 
 <section class="container">
-	<JobApplicationForm {formFieldData} />
+	<JobApplicationForm
+		{formFieldData}
+		onSuccess={() => {
+			invalidateAll();
+		}}
+	/>
 </section>

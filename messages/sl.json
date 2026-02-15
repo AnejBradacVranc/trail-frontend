@@ -11,5 +11,15 @@
 		"settings": "Nastavitve",
 		"analytics": "Analitika",
 		"reminders": "Obveščanja"
+	},
+	"application_status": {
+		"applied": "Prijavljeno",
+		"recruiter_contacted": "Kontakt s strani kadrovnika",
+		"phone_screen": "Telefonski razgovor",
+		"interview": "Razgovor",
+		"offer": "Ponudba",
+		"rejected": "Zavrnjeno",
+		"withdrawn": "Umaknjeno",
+		"accepted": "Sprejeto"
 	}
 }

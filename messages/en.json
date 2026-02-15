@@ -11,5 +11,15 @@
 		"settings": "Settings",
 		"analytics": "Analytics",
 		"reminders": "Reminders"
+	},
+	"application_status": {
+		"applied": "Applied",
+		"recruiter_contacted": "Recruiter Contacted",
+		"phone_screen": "Phone Screen",
+		"interview": "Interview",
+		"offer": "Offer",
+		"rejected": "Rejected",
+		"withdrawn": "Withdrawn",
+		"accepted": "Accepted"
 	}
 }

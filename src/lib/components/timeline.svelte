@@ -3,6 +3,7 @@
 	import { type ApplicationEvent } from '$lib/types/jobApplication';
 	import { cn } from '$lib/utils';
 	import moment from 'moment';
+	import { m } from '$lib/paraglide/messages.js';
 
 	interface Props {
 		timeline: ApplicationEvent[];
@@ -29,7 +30,7 @@
 
 				<div>
 					<p class={cn('rounded-xl bg-primary/10 p-2 font-bold uppercase', color, bgColor)}>
-						{event.event_type}
+						{m[`application_status.${event.event_type}`]()}
 					</p>
 				</div>
 			</div>

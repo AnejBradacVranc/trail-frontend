@@ -20,20 +20,23 @@
 		CircleCheck,
 		CircleSlash,
 		Bell,
-		Clock
+		Notebook
 	} from '@lucide/svelte';
 	import * as Tabs from '$lib/components/ui/tabs/index.js';
-
+	import * as Dialog from '$lib/components/ui/dialog/index.js';
+	import { buttonVariants } from '$lib/components/ui/button';
 	import CardContent from '$lib/components/ui/card/card-content.svelte';
 	import CardFooter from '$lib/components/ui/card/card-footer.svelte';
 	import ApplicationFileCard from '$lib/components/applicationFileCard.svelte';
 	import Timeline from '$lib/components/timeline.svelte';
+	import NoteForm from '$lib/components/forms/notes/noteForm.svelte';
+	import { invalidate, invalidateAll } from '$app/navigation';
 
 	const { data }: PageProps = $props();
 
 	const { application } = $derived(data);
 
-	console.log(application);
+	let isNoteDialogOpen = $state(false);
 </script>
 
 <section class="container">
@@ -112,16 +115,41 @@
 							<Card class="border-none shadow-none">
 								<CardContent class="flex flex-col gap-6">
 									<Timeline timeline={application?.events || []} />
-									{#if application?.notes && application?.notes.length > 0}
-										<div class="flex flex-col gap-6">
+									<div class="flex flex-col gap-6">
+										<div class="flex w-full items-center justify-between">
 											<h4>Attached notes</h4>
+											<Dialog.Root bind:open={isNoteDialogOpen}>
+												<Dialog.Trigger class={buttonVariants({ variant: 'outline' })}>
+													<Notebook /> Add note
+												</Dialog.Trigger>
+												<Dialog.Content class="max-h-[95vh] overflow-y-auto sm:max-w-250">
+													{#if application}
+														<NoteForm
+															jobApplicationId={application.application_id}
+															onSuccess={() => {
+																isNoteDialogOpen = false;
+																invalidateAll();
+															}}
+														/>
+													{/if}
+													<Dialog.Footer>
+														<Dialog.Close class={buttonVariants({ variant: 'outline' })}
+															>Cancel</Dialog.Close
+														>
+													</Dialog.Footer>
+												</Dialog.Content>
+											</Dialog.Root>
+										</div>
+										{#if application?.notes && application?.notes.length > 0}
 											{#each application?.notes as note}
 												<div class="rounded-md bg-secondary p-4 text-secondary-foreground">
 													{@html note.note_content}
 												</div>
 											{/each}
-										</div>
-									{/if}
+										{:else}
+											<p class="text-muted-foreground">No notes yet. Add your first note!</p>
+										{/if}
+									</div>
 								</CardContent>
 							</Card>
 						</Tabs.Content>
@@ -251,13 +279,15 @@
 							<p class="text-muted-foreground">{application?.company.headquarters_location}</p>
 						</div>
 					</div>
-					<div class="flex items-center gap-3">
-						<PersonStanding />
-						<div class="flex flex-col">
-							<p class="font-semibold">Employees</p>
-							<p class="text-muted-foreground">{application?.company.employees_count}</p>
+					{#if application?.company.employees_count}
+						<div class="flex items-center gap-3">
+							<PersonStanding />
+							<div class="flex flex-col">
+								<p class="font-semibold">Employees</p>
+								<p class="text-muted-foreground">{application.company.employees_count}</p>
+							</div>
 						</div>
-					</div>
+					{/if}
 					{#if application?.company.website}
 						<div class="flex items-center gap-3">
 							<Globe />
