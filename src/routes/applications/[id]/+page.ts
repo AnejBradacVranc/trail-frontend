@@ -1,15 +1,21 @@
+import { getApplicationStatuses } from '$lib/api/applicationStatuses';
 import { getJobApplication } from '$lib/api/jobApplication';
 import type { PageLoad } from './$types';
 
 export const load: PageLoad = async ({ params }) => {
-	let response;
+	let jobApplication;
+	let jobApplicationStatuses;
 	try {
-		response = await getJobApplication(parseInt(params.id));
+		jobApplication = await getJobApplication(parseInt(params.id));
+		jobApplicationStatuses = await getApplicationStatuses();
 	} catch (error) {
 		console.error('Error fetching application:', error);
 	}
 
 	return {
-		application: response?.data.success ? response.data.data || null : null
+		application: jobApplication?.data.success ? jobApplication.data.data || null : null,
+		applicationStatuses: jobApplicationStatuses?.data.success
+			? jobApplicationStatuses.data.data || null
+			: null
 	};
 };

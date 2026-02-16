@@ -148,13 +148,11 @@
 		</Button>
 	</CardFooter>
 
-	{#if isSubmitSuccessful !== null}
-		<FormSubmissionAlert
-			{isSubmitSuccessful}
-			successTitle="Note added successfully!"
-			successDescription="Your note has been saved to this job application."
-			errorTitle="Unable to add note"
-			errorDescription="Try again later. If the problem persists, contact support."
-		/>
-	{/if}
+	<FormSubmissionAlert
+		{isSubmitSuccessful}
+		successTitle="Note added successfully!"
+		successDescription="Your note has been saved to this job application."
+		errorTitle="Unable to add note"
+		errorDescription="Try again later. If the problem persists, contact support."
+	/>
 </Card>

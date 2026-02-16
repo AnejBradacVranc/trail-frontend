@@ -1,3 +1,4 @@
+import { goto } from '$app/navigation';
 import type { AuthUser } from '$lib/types/auth';
 import type { SEO } from '$lib/types/seo';
 import type { LayoutServerLoad } from './$types';
@@ -26,7 +27,8 @@ export const load: LayoutServerLoad = async ({
 
 	const isPublicRoute = PUBLIC_ROUTES.some((route) => url.pathname === route);
 	if (!user && !isPublicRoute) {
-		throw redirect(303, '/login');
+		goto('/login');
+		//throw redirect(303, '/login');
 	}
 
 	return {

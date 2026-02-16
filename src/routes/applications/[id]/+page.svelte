@@ -20,7 +20,10 @@
 		CircleCheck,
 		CircleSlash,
 		Bell,
-		Notebook
+		History,
+		Plus,
+		CheckCircle,
+		XCircle
 	} from '@lucide/svelte';
 	import * as Tabs from '$lib/components/ui/tabs/index.js';
 	import * as Dialog from '$lib/components/ui/dialog/index.js';
@@ -30,14 +33,79 @@
 	import ApplicationFileCard from '$lib/components/applicationFileCard.svelte';
 	import Timeline from '$lib/components/timeline.svelte';
 	import NoteForm from '$lib/components/forms/notes/noteForm.svelte';
-	import { invalidate, invalidateAll } from '$app/navigation';
+	import { invalidateAll } from '$app/navigation';
+	import {
+		Select,
+		SelectContent,
+		SelectGroup,
+		SelectItem,
+		SelectTrigger
+	} from '$lib/components/ui/select';
+	import { cn } from '$lib/utils';
+	import { updateReminderStatus } from '$lib/api/reminders';
+	import type { Reminder } from '$lib/types/reminders';
+	import * as Alert from '$lib/components/ui/alert/index.js';
+	import FormSubmissionAlert from '$lib/components/formSubmissionAlert.svelte';
 
 	const { data }: PageProps = $props();
 
 	const { application } = $derived(data);
 
 	let isNoteDialogOpen = $state(false);
+
+	const reminderStatuses = [
+		{ value: 'false', label: 'Pending' },
+		{ value: 'true', label: 'Completed' }
+	];
+
+	let reminderStatusValues: Record<number, string> = $state({});
+	let updateReminderSuccess: boolean | null = $state(null);
+
+	const handleUpdateReminderStatus = async (value: string, reminder: Reminder) => {
+		const isCompleted = value === 'true';
+		try {
+			const { data } = await updateReminderStatus(reminder.reminder_id, isCompleted);
+
+			if (data.success) {
+				await invalidateAll();
+				updateReminderSuccess = true;
+			} else {
+				console.error('Failed to update reminder status', data.data.message);
+				reminderStatusValues[reminder.reminder_id] = reminder.is_completed.toString();
+			}
+		} catch (error) {
+			console.error('Error updating reminder status:', error);
+			reminderStatusValues[reminder.reminder_id] = reminder.is_completed.toString();
+		}
+	};
+
+	$effect(() => {
+		if (application?.reminders) {
+			const newValues: Record<number, string> = {};
+			application.reminders.forEach((reminder) => {
+				newValues[reminder.reminder_id] = reminder.is_completed.toString();
+			});
+			reminderStatusValues = newValues;
+		}
+		if (updateReminderSuccess) {
+			const timer = setTimeout(() => {
+				updateReminderSuccess = null;
+			}, 2000);
+
+			return () => {
+				clearTimeout(timer);
+			};
+		}
+	});
 </script>
+
+<FormSubmissionAlert
+	variant="popup"
+	isSubmitSuccessful={updateReminderSuccess}
+	successTitle="Reminder status updated successfully"
+	errorTitle="Unable to update reminder"
+	errorDescription="Try again later. If the problem persists, contact support."
+/>
 
 <section class="container">
 	<Card>
@@ -99,16 +167,18 @@
 			<Card class="col-span-2">
 				<CardContent>
 					<Tabs.Root value="timeline">
-						<Tabs.List class="bg-card">
+						<Tabs.List class="w-full">
 							<Tabs.Trigger
 								value="timeline"
-								class="p-4 text-lg hover:shadow-sm data-[state=active]:bg-secondary data-[state=active]:text-secondary-foreground"
-								>Timeline</Tabs.Trigger
+								class="p-4 text-lg hover:shadow-sm data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
+								><History /> Timeline</Tabs.Trigger
 							>
 							<Tabs.Trigger
 								value="reminders"
-								class="p-4 text-lg hover:shadow-sm data-[state=active]:bg-secondary data-[state=active]:text-secondary-foreground"
-								>Reminders</Tabs.Trigger
+								class="p-4 text-lg hover:shadow-sm data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
+							>
+								<Calendar />
+								Reminders</Tabs.Trigger
 							>
 						</Tabs.List>
 						<Tabs.Content value="timeline">
@@ -119,8 +189,8 @@
 										<div class="flex w-full items-center justify-between">
 											<h4>Attached notes</h4>
 											<Dialog.Root bind:open={isNoteDialogOpen}>
-												<Dialog.Trigger class={buttonVariants({ variant: 'outline' })}>
-													<Notebook /> Add note
+												<Dialog.Trigger class={buttonVariants({ variant: 'secondary' })}>
+													<Plus /> Add note
 												</Dialog.Trigger>
 												<Dialog.Content class="max-h-[95vh] overflow-y-auto sm:max-w-250">
 													{#if application}
@@ -161,7 +231,7 @@
 											{#each application?.reminders as reminder}
 												<div class="flex items-center justify-between border-b border-border pb-4">
 													<div class="flex items-center gap-6">
-														{#if reminder.is_completed}
+														{#if (reminderStatusValues[reminder.reminder_id] || reminder.is_completed.toString()) === 'true'}
 															<CircleCheck class="text-success" />
 														{:else}
 															<Bell class="text-blue-600" />
@@ -179,19 +249,39 @@
 														</div>
 													</div>
 													<div>
-														{#if reminder.is_completed}
-															<p
-																class="rounded-xl bg-green-50 p-2 font-bold text-green-600 uppercase"
+														<Select
+															type="single"
+															value={reminderStatusValues[reminder.reminder_id] ||
+																reminder.is_completed.toString()}
+															onValueChange={(value) => {
+																reminderStatusValues[reminder.reminder_id] = value;
+																handleUpdateReminderStatus(value, reminder);
+															}}
+														>
+															<SelectTrigger
+																class={cn(
+																	'rounded-xl  bg-green-50 p-2 font-bold uppercase',
+																	(reminderStatusValues[reminder.reminder_id] ||
+																		reminder.is_completed.toString()) === 'true'
+																		? 'bg-green-50 text-green-600'
+																		: 'bg-blue-50 text-blue-600'
+																)}
 															>
-																Completed
-															</p>
-														{:else}
-															<p
-																class="rounded-xl bg-blue-50 p-2 font-bold text-blue-600 uppercase"
-															>
-																Pending
-															</p>
-														{/if}
+																{(reminderStatusValues[reminder.reminder_id] ||
+																	reminder.is_completed.toString()) === 'true'
+																	? 'Completed'
+																	: 'Pending'}
+															</SelectTrigger>
+															<SelectContent>
+																<SelectGroup>
+																	{#each reminderStatuses as reminderStatus}
+																		<SelectItem value={reminderStatus.value}
+																			>{reminderStatus.label}</SelectItem
+																		>
+																	{/each}
+																</SelectGroup>
+															</SelectContent>
+														</Select>
 													</div>
 												</div>
 											{/each}

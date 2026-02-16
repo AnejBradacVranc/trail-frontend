@@ -115,13 +115,11 @@
 		<Button type="submit" form="loginForm">Login</Button>
 	</CardFooter>
 
-	{#if isSubmitSuccessful !== null}
-		<FormSubmissionAlert
-			{isSubmitSuccessful}
-			successTitle="Welcome back!"
-			successDescription="You've successfully logged in. Redirecting to your dashboard..."
-			errorTitle="Login failed"
-			errorDescription="Invalid email or password. Please check your credentials and try again."
-		/>
-	{/if}
+	<FormSubmissionAlert
+		{isSubmitSuccessful}
+		successTitle="Welcome back!"
+		successDescription="You've successfully logged in. Redirecting to your dashboard..."
+		errorTitle="Login failed"
+		errorDescription="Invalid email or password. Please check your credentials and try again."
+	/>
 </Card>

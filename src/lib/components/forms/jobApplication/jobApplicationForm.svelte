@@ -438,13 +438,11 @@
 		</Button>
 	</CardFooter>
 
-	{#if isSubmitSuccessful !== null}
-		<FormSubmissionAlert
-			{isSubmitSuccessful}
-			successTitle="New application added successfully!"
-			successDescription="You can now view and manage this application in the job applications list."
-			errorTitle="Unable to add application"
-			errorDescription="Try again later. If the problem persists, contact support."
-		/>
-	{/if}
+	<FormSubmissionAlert
+		{isSubmitSuccessful}
+		successTitle="New application added successfully!"
+		successDescription="You can now view and manage this application in the job applications list."
+		errorTitle="Unable to add application"
+		errorDescription="Try again later. If the problem persists, contact support."
+	/>
 </Card>
