@@ -21,9 +21,7 @@
 		CircleSlash,
 		Bell,
 		History,
-		Plus,
-		CheckCircle,
-		XCircle
+		Plus
 	} from '@lucide/svelte';
 	import * as Tabs from '$lib/components/ui/tabs/index.js';
 	import * as Dialog from '$lib/components/ui/dialog/index.js';
@@ -33,6 +31,7 @@
 	import ApplicationFileCard from '$lib/components/applicationFileCard.svelte';
 	import Timeline from '$lib/components/timeline.svelte';
 	import NoteForm from '$lib/components/forms/notes/noteForm.svelte';
+	import ReminderForm from '$lib/components/forms/reminders/reminderForm.svelte';
 	import { invalidateAll } from '$app/navigation';
 	import {
 		Select,
@@ -52,6 +51,7 @@
 	const { application } = $derived(data);
 
 	let isNoteDialogOpen = $state(false);
+	let isReminderDialogOpen = $state(false);
 
 	const reminderStatuses = [
 		{ value: 'false', label: 'Pending' },
@@ -118,17 +118,31 @@
 					<div class="flex flex-col gap-1">
 						<CardTitle><h1>{application?.job_title}</h1></CardTitle>
 						<CardDescription>
-							<span
-								>{application?.company.name} - {application?.company.headquarters_location} -
-								<span class="italic"
-									>applied {moment(application?.applied_at).format('MMM D, YYYY')}</span
-								></span
-							>
-						</CardDescription>
+							<span>{application?.company.name} - {application?.company.headquarters_location}</span
+							></CardDescription
+						>
 					</div>
 				</div>
 				<div class="flex gap-2">
-					<Button variant="secondary"><Calendar /> Create reminder</Button>
+					<Dialog.Root bind:open={isReminderDialogOpen}>
+						<Dialog.Trigger class={buttonVariants({ variant: 'secondary' })}>
+							<Calendar /> Create reminder
+						</Dialog.Trigger>
+						<Dialog.Content class="max-h-[95vh] overflow-y-auto sm:max-w-250">
+							{#if application}
+								<ReminderForm
+									applicationId={application.application_id}
+									onSuccess={() => {
+										isReminderDialogOpen = false;
+										invalidateAll();
+									}}
+								/>
+							{/if}
+							<Dialog.Footer>
+								<Dialog.Close class={buttonVariants({ variant: 'outline' })}>Cancel</Dialog.Close>
+							</Dialog.Footer>
+						</Dialog.Content>
+					</Dialog.Root>
 					<Button><Pencil /> Edit application</Button>
 				</div>
 			</div>
@@ -148,9 +162,11 @@
 						>{application?.status_name}</span
 					>
 				</CardContent>
-				<!--<CardFooter>
-					<p class="text-sm text-muted-foreground">Some description</p>
-				</CardFooter>-->
+				<CardFooter>
+					<p class="text-sm text-muted-foreground">
+						Applied {moment(application?.applied_at).format('MMM D, YYYY')}
+					</p>
+				</CardFooter>
 			</Card>
 			<Card class="gap-2">
 				<CardHeader>
@@ -183,7 +199,7 @@
 						</Tabs.List>
 						<Tabs.Content value="timeline">
 							<Card class="border-none shadow-none">
-								<CardContent class="flex flex-col gap-6">
+								<CardContent class="flex flex-col gap-12">
 									<Timeline timeline={application?.events || []} />
 									<div class="flex flex-col gap-6">
 										<div class="flex w-full items-center justify-between">

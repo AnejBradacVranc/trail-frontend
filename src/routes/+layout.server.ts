@@ -27,8 +27,8 @@ export const load: LayoutServerLoad = async ({
 
 	const isPublicRoute = PUBLIC_ROUTES.some((route) => url.pathname === route);
 	if (!user && !isPublicRoute) {
-		goto('/login');
-		//throw redirect(303, '/login');
+		//goto('/login');
+		throw redirect(303, '/login');
 	}
 
 	return {

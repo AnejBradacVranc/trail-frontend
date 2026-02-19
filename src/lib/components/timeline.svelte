@@ -12,14 +12,22 @@
 	const { timeline }: Props = $props();
 </script>
 
-<div class="flex flex-col gap-8">
+<div class="flex flex-col">
 	{#if timeline.length > 0}
-		{#each timeline as event}
+		{#each timeline as event, index}
 			{@const { Icon, color, bgColor } = getEventConfig(event.event_type)}
-
-			<div class="flex items-center justify-between border-b border-border pb-4">
+			<div class="flex items-center justify-between">
 				<div class="flex items-center gap-6">
-					<Icon class={color} />
+					<div class="flex flex-col items-center justify-center">
+						<div
+							class="flex items-center justify-center rounded-full border-[3px] border-secondary p-4"
+						>
+							<Icon class={color} />
+						</div>
+						{#if index < timeline.length - 1}
+							<div class="h-10 w-0.75 bg-secondary"></div>
+						{/if}
+					</div>
 					<div class="flex flex-col gap-2">
 						<p class="font-semibold">{event.note}</p>
 						<p class="text-muted-foreground">
